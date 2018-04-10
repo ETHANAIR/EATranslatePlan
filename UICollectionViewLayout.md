@@ -436,16 +436,42 @@ func targetIndexPath(forInteractivelyMovingItem: IndexPath, withPosition: CGPoin
 func invalidateLayout()
 ```
 > Invalidates the current layout and triggers a layout update.
+> 
+> 使当前布局无效并触发布局更新。
+> 
+> You can call this method at any time to update the layout information. This method invalidates the layout of the collection view itself and returns right away. Thus, you can call this method multiple times from the same block of code without triggering multiple layout updates. The actual layout update occurs during the next view layout update cycle.
+> 
+> If you override this method, you must call super at some point in your implementation.
+> 
+> 您可以随时调用此方法来更新布局信息。此方法使集合视图本身的布局无效并立即返回。因此，您可以从同一代码块多次调用此方法，而不会触发多个布局更新。实际布局更新在下一个视图布局更新周期中发生。
+> 
+> 如果您重写此方法，则必须在实现中的某个时刻调用super。
 
 ```
 func invalidateLayout(with: UICollectionViewLayoutInvalidationContext)
 ```
 > Invalidates the current layout using the information in the provided context object.
+> 
+> 使用提供的上下文对象中的信息使当前布局无效。
+> 
+> The default implementation of this method optimizes the layout process using the base properties of the UICollectionViewLayoutInvalidationContext class. If you define a custom context object for your layout, override this method and apply any custom properties of the context object to your layout computations.
+> 
+> If you override this method, you must call super at some point in your implementation.
+> 
+> 此方法的默认实现使用UICollectionViewLayoutInvalidationContext类的基本属性来优化布局过程。如果为布局定义自定义上下文对象，请覆盖此方法并将上下文对象的任何自定义属性应用于布局计算。
+> 
+> 如果您重写此方法，则必须在实现中的某个时刻调用super。
 
 ```
 class var invalidationContextClass: AnyClass
 ```
 > Returns the class to use when creating an invalidation context for the layout.
+> 
+> 返回为布局创建失效上下文时要使用的类。
+> 
+> If you subclass UICollectionViewLayout and use a custom invalidation context object to improve the performance of your layout updates, override this method and return your UICollectionViewLayoutInvalidationContext subclass. When the collection view needs to invalidate your layout, it uses the class you provide to create an appropriate invalidation context object.
+> 
+> 如果您继承UICollectionViewLayout并使用自定义无效上下文对象来提高布局更新的性能，请覆盖此方法并返回您的UICollectionViewLayoutInvalidationContext子类。当集合视图需要使布局无效时，它使用您提供的类来创建适当的无效化上下文对象。
 
 ```
 func shouldInvalidateLayout(forBoundsChange: CGRect)
@@ -466,64 +492,180 @@ func shouldInvalidateLayout(forBoundsChange: CGRect)
 func invalidationContext(forBoundsChange: CGRect)
 ```
 > Returns a context object that defines the portions of the layout that should change when a bounds change occurs.
+> 
+> 返回一个上下文对象，用于定义在发生边界更改时应更改的布局部分。
+> 
+> The default implementation of this method creates an instance of the class provided by the invalidationContextClass class method and returns it. If you want to use a custom invalidation context object with your layout, always override that method and return your custom class.
+> 
+> 此方法的默认实现将创建由invalidationContextClass类方法提供的类的实例并将其返回。如果您想在布局中使用自定义无效化上下文对象，请始终覆盖该方法并返回您的自定义类。
+> 
+> You can override this method if you want to create and configure your custom invalidation context in response to a bounds change. If you override this method, you must call super first to get the invalidation context object to return. After getting this object, set any custom properties and return it.
+> 
+> 如果要创建和配置自定义无效上下文以响应边界更改，则可以覆盖此方法。如果您重写此方法，则必须先调用super来获取无效化上下文对象才能返回。获取此对象后，设置任何自定义属性并将其返回。
 
 ```
 func shouldInvalidateLayout(forPreferredLayoutAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes: UICollectionViewLayoutAttributes)
 ```
 > Asks the layout object if changes to a self-sizing cell require a layout update.
+> 
+> 询问布局对象是否对自定义单元格的更改需要布局更新。
+> 
+> When a collection view includes self-sizing cells, the cells are given the opportunity to modify their own layout attributes before those attributes are applied. A self-sizing cell might do this to specify a different cell size than the one the layout object provides. When the cell provides a different set of attributes, the collection view calls this method to determine if the cell’s change requires a larger layout refresh.
+> 
+> 当集合视图包含自定义大小的单元格时，单元格将有机会在应用这些属性之前修改其自己的布局属性。自定义大小的单元可能会这样做，以指定与布局对象提供的大小不同的单元大小。当单元格提供了一组不同的属性时，集合视图将调用此方法来确定单元格的更改是否需要更大的布局刷新。
+> 
+> If you are implementing a custom layout, you can override this method and use it to determine if your layout should be invalidated based on the specified attributes. The default implementation of this method returns false.
+> 
+> 如果您正在实现自定义布局，则可以覆盖此方法并使用它来根据指定的属性确定布局是否应该失效。此方法的默认实现返回false。
 
 ```
 func invalidationContext(forPreferredLayoutAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes: UICollectionViewLayoutAttributes)
 ```
 > Returns a context object that identifies the portions of the layout that should change in response to dynamic cell changes.
+> 
+> 返回一个上下文对象，用于标识为响应动态单元更改而应更改的布局部分。
+> 
+> The default implementation of this method creates an instance of the class provided by the invalidationContextClass class method and returns it. If you want to use a custom invalidation context object with your layout, always override that method and return your custom class.
+> 
+> 此方法的默认实现将创建由invalidationContextClass类方法提供的类的实例并将其返回。如果您想在布局中使用自定义无效化上下文对象，请始终覆盖该方法并返回您的自定义类。
+> 
+> Subclasses can override this method and use it to perform additional configuration of the invalidation context before returning it. In your custom implementation, call super so that the parent class can perform the basic configuration of the object.
+> 
+> 子类可以重写此方法，并在返回之前使用它来执行无效上下文的其他配置。在您的自定义实现中，调用super以便父类可以执行对象的基本配置。
 
 ```
 func invalidationContext(forInteractivelyMovingItems: [IndexPath], withTargetPosition: CGPoint, previousIndexPaths: [IndexPath], previousPosition: CGPoint)
 ```
 > Returns a context object that identifies the items that are being interactively moved in the layout.
+> 
+> 返回一个上下文对象，用于标识在布局中交互式移动的项目。
+> 
+> The layout object uses this method to retrieve invalidation contexts when an interactive move of one or more items is in progress. The default implementation creates an instance of the class provided by the invalidationContextClass class method, fills it with the provided information, and returns it. If you want to use a custom invalidation context object with your layout, always override that method and return your custom class.
+> 
+> 布局对象使用此方法在一个或多个项目的交互式移动正在进行时检索无效上下文。默认实现创建由invalidationContextClass类方法提供的类的实例，用提供的信息填充它并返回它。如果您想在布局中使用自定义无效化上下文对象，请始终覆盖该方法并返回您的自定义类。
+> 
+> Subclasses can override this method and use it to perform additional configuration of the invalidation context before returning it. In your custom implementation, call super so that the parent class can perform the basic configuration of the object.
+> 
+> 子类可以重写此方法，并在返回之前使用它来执行无效上下文的其他配置。在您的自定义实现中，调用super以便父类可以执行对象的基本配置。
 
 ```
 func invalidationContextForEndingInteractiveMovementOfItems(toFinalIndexPaths: [IndexPath], previousIndexPaths: [IndexPath], movementCancelled: Bool)
 ```
 > Returns a context object that identifies the items that were moved
+> 
+> 返回标识已移动项目的上下文对象
+> 
+> The layout object uses this method to retrieve invalidation contexts when an interactive move of one or more items ends, either because the move was successful or because it was cancelled by the user. The default implementation creates an instance of the class provided by the invalidationContextClass class method, fills it with the provided information, and returns it. If you want to use a custom invalidation context object with your layout, always override that method and return your custom class.
+> 
+> 当一个或多个项目的交互式移动结束时，布局对象使用此方法检索失效上下文，无论是因为移动成功还是由用户取消。默认实现创建由invalidationContextClass类方法提供的类的实例，用提供的信息填充它并返回它。如果您想在布局中使用自定义无效化上下文对象，请始终覆盖该方法并返回您的自定义类。
+> 
+> Subclasses can override this method and use it to perform additional configuration of the invalidation context before returning it. In your custom implementation, call super so that the parent class can perform the basic configuration of the object.
+> 
+> 子类可以重写此方法，并在返回之前使用它来执行无效上下文的其他配置。在您的自定义实现中，调用super以便父类可以执行对象的基本配置。
 
 ### Coordinating Animated Changes
 ```
 func prepare(forAnimatedBoundsChange: CGRect)
 ```
 > Prepares the layout object for animated changes to the view’s bounds or the insertion or deletion of items.
+> 
+> 准备布局对象以对视图边界进行动画更改或插入或删除项目。
+> 
+> The collection view calls this method before performing any animated changes to the view’s bounds or before the animated insertion or deletion of items. This method is the layout object’s opportunity to perform any calculations needed to prepare for those animated changes. Specifically, you might use this method to calculate the initial or final positions of inserted or deleted items so that you can return those values when asked for them.
+> 
+> 集合视图在对视图的边界执行任何动画更改之前或在动画插入或删除项目之前调用此方法。此方法是布局对象有机会执行任何需要准备这些动画更改的计算。具体而言，您可以使用此方法计算插入或删除项目的初始或最终位置，以便您在询问它们时可以返回这些值。
+> 
+> You can also use this method to perform additional animations. Any animations you create are added to the animation block used to handle the insertions, deletions, and bounds changes.
+> 
+> 您也可以使用此方法执行其他动画。您创建的任何动画都会添加到用于处理插入，删除和边界更改的动画块中。
 
 ```
 func finalizeAnimatedBoundsChange()
 ```
 > Cleans up after any animated changes to the view’s bounds or after the insertion or deletion of items.
+> 
+> 在对视图边界进行任何动画更改之后或在插入或删除项目之后清除。
+> 
+> The collection view calls this method after creating the animations for changing the view’s bounds or after the animated insertion or deletion of items. This method is the layout object’s opportunity to do any cleanup related to those operations.
+> 
+> 集合视图在创建用于更改视图边界的动画之后或在动画插入或删除项目之后调用此方法。此方法是布局对象有机会执行与这些操作相关的任何清理。
+> 
+> You can also use this method to perform additional animations. Any animations you create are added to the animation block used to handle the insertions, deletions, and bounds changes.
+> 
+> 您也可以使用此方法执行其他动画。您创建的任何动画都会添加到用于处理插入，删除和边界更改的动画块中。
 
 ### Transitioning Between Layouts
 ```
 func prepareForTransition(from: UICollectionViewLayout)
 ```
 > Tells the layout object to prepare to be installed as the layout for the collection view.
+> 
+> 通知布局对象准备安装为集合视图的布局。
+> 
+> Prior to performing a layout transition, the collection view calls this method so that your layout object can perform any initial calculations needed to generate layout attributes.
+> 
+> 在执行布局转换之前，集合视图会调用此方法，以便您的布局对象可以执行生成布局属性所需的任何初始计算。
 
 ```
 func prepareForTransition(to: UICollectionViewLayout)
 ```
 > Tells the layout object that it is about to be removed as the layout for the collection view.
+> 
+> 告诉布局对象它将被作为集合视图的布局移除。
+> 
+> Prior to performing a layout transition, the collection view calls this method so that your layout object can perform any initial calculations needed to generate layout attributes.
+> 
+> 在执行布局转换之前，集合视图会调用此方法，以便您的布局对象可以执行生成布局属性所需的任何初始计算。
 
 ```
 func finalizeLayoutTransition()
 ```
 > Tells the layout object to perform any final steps before the transition animations occur.
+> 
+> 告诉布局对象在转换动画发生之前执行任何最后的步骤。
+> 
+> The collection view calls this method after it has gathered all of the layout attributes needed to perform a transition from one layout to another. You can use this method to clean up any data structures or caches created by your implementations of the prepareForTransition(from:) or prepareForTransition(to:) methods.
+> 
+> 集合视图在收集完成从一个布局到另一个布局的转换所需的所有布局属性之后调用此方法。您可以使用此方法来清理由prepareForTransition（from :)或prepareForTransition（to :)方法的实现所创建的任何数据结构或缓存。
 
 ### Registering Decoration Views
 ```
 func register(AnyClass?, forDecorationViewOfKind: String)
 ```
 > Registers a class for use in creating decoration views for a collection view.
+> 
+> 注册一个用于为集合视图创建装饰视图的类。
+> 
+> This method gives the layout object a chance to register a decoration view for use in the collection view. Decoration views provide visual adornments to a section or to the entire collection view but are not otherwise tied to the data provided by the collection view’s data source.
+> 
+> 此方法使布局对象有机会注册装饰视图以在集合视图中使用。装饰视图提供了对部分或整个集合视图的视觉装饰，但是不会与集合视图的数据源提供的数据绑定。
+
+> You do not need to create decoration views explicitly. After registering one, it is up to the layout object to decide when a decoration view is needed and return the corresponding layout attributes from its layoutAttributesForElements(in:) method. For layout attributes that specify a decoration view, the collection view creates (or reuses) a view and displays it automatically based on the registered information.
+> 
+> 您不需要明确创建装饰视图。注册完一个之后，由布局对象决定何时需要装饰视图，并从其layoutAttributesForElements（in :)方法返回相应的布局属性。对于指定装饰视图的布局属性，集合视图会创建（或重新使用）视图并根据注册信息自动显示该视图。
+
+> If you previously registered a class or nib file with the same kind string, the class you specify in the viewClass parameter replaces the old entry. You may specify nil for viewClass if you want to unregister the decoration view.
+> 
+> 如果您以前使用相同种类的字符串注册类或nib文件，则您在viewClass参数中指定的类会替换旧条目。如果要取消注册修饰视图，则可以为viewClass指定nil。
 
 ```
 func register(UINib?, forDecorationViewOfKind: String)
 ```
 > Registers a nib file for use in creating decoration views for a collection view.
+> 
+> 注册一个nib文件，用于为集合视图创建装饰视图。
+> 
+> This method gives the layout object a chance to register a decoration view for use in the collection view. Decoration views provide visual adornments to a section or to the entire collection view but are not otherwise tied to the data provided by the collection view’s data source.
+> 
+> 此方法使布局对象有机会注册装饰视图以在集合视图中使用。装饰视图提供了对部分或整个集合视图的视觉装饰，但是不会与集合视图的数据源提供的数据绑定。
+
+> You do not need to create decoration views explicitly. After registering one, it is up to the layout object to decide when a decoration view is needed and return the corresponding layout attributes from its layoutAttributesForElements(in:) method. For layout attributes that specify a decoration view, the collection view creates (or reuses) a view and displays it automatically based on the registered information.
+> 
+> 您不需要明确创建装饰视图。注册完一个之后，由布局对象决定何时需要装饰视图，并从其layoutAttributesForElements（in :)方法返回相应的布局属性。对于指定装饰视图的布局属性，集合视图会创建（或重新使用）视图并根据注册信息自动显示该视图。
+
+> If you previously registered a class or nib file with the same kind string, the class you specify in the viewClass parameter replaces the old entry. You may specify nil for viewClass if you want to unregister the decoration view.
+> 
+> 如果您以前使用相同种类的字符串注册类或nib文件，则您在viewClass参数中指定的类会替换旧条目。如果要取消注册修饰视图，则可以为viewClass指定nil。
 
 ### Supporting Right-To-Left Layouts-左右手使用习惯的布局
 ```
