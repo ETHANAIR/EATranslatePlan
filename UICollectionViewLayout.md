@@ -9,6 +9,7 @@
 不知道你有没有认真的阅读[UICollectionViewLayout](https://developer.apple.com/documentation/uikit/uicollectionviewlayout)这个类的官方文档。反正我之前是没有很好的阅读并理解，只是单纯的会使用而已。
 
 如果你英文不太好没关系，接下来我给你用正宗的普通话嗦一遍。
+你也可以通过`CMD + F`进行快速查找。
 
 ## UICollectionViewLayout
 
